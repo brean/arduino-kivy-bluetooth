@@ -1,0 +1,11 @@
+#:kivy 1.0.9
+
+<Main>
+    button: button
+    size_hint: (1, 1)
+    size: (self.width, self.height)
+    ToggleButton:
+        id: button
+        text: "OFF"
+        on_press: root.toggle_blink()
+
