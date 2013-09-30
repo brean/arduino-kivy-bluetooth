@@ -1,17 +1,19 @@
 # -*- coding: utf-8 -*-
-
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
-import bluetooth
 import glue
 
-#data = {
-#    'protocol': {
-#        'name': 'bluetooth',
-#        # device address
-#        'addr': '/dev/ttyACM0',
-#    },
-#}
+# data = {
+#     'protocol': {
+#         'name': 'serial',
+#         # device address
+#         'addr': '/dev/ttyACM1',
+#         'baudrate': 57600
+#     },
+#     'system': {
+#         'name': 'arduino',
+#     }
+# }
 
 data = {
     'protocol': {
@@ -29,27 +31,16 @@ system = glue.connect(data)
 
 class Main(BoxLayout):
     def toggle_blink(self):
-        global board
         if self.button.state == 'normal':
             # stop blinking
             self.button.background_color = [1, 1, 1, 1]
             self.button.text = 'OFF'
-            self.blink(False)
+            system.digital[12].write(0)
         else:
             self.button.background_color = [1, 0, 0, 1]
             # start to blink
             self.button.text = 'ON'
-            self.blink(True)
-
-    def blink(self, activate):
-        global board
-        if activate:
-            board.digital[12].write(1)
-        else:
-            board.digital[12].write(0)
-            #global blink_active
-            #blink_active = activate
-            #arduino_update_blink()
+            system.digital[12].write(1)
 
 
 class BlinkingApp(App):

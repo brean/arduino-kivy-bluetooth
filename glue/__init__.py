@@ -14,9 +14,9 @@ def connect(data):
     :param data: data that describes system and protocol
     """
     protocol_data = data['protocol']
-    protocol = protocols[protocol_data['name']](data)
+    protocol = protocols[protocol_data['name']](protocol_data)
 
     system_data = data['system']
-    system = systems[system_data['name']](protocol)
+    system = systems[system_data['name']](protocol, system_data)
 
     return system

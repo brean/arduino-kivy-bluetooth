@@ -25,13 +25,16 @@ class Protocol(object):
         """
         return None
 
-
 try:
     import bluetooth
 
-    class BluetoothSocket(Protocol, bluetooth.BluetoothSocket):
-        def __init__(self):
-            super(self, BluetoothSocket).__init__(self.getsockname())
+    class BluetoothSocket(bluetooth.BluetoothSocket, Protocol):
+        def __init__(self, config):
+            self.config = config
+            self.name = config['name']
+            super(BluetoothSocket, self).__init__()
+            print (config['addr'], config['port'])
+            self.connect((config['addr'], config['port']))
 
         def write(self, data):
             """
@@ -45,7 +48,7 @@ try:
             read data from system
             :return: received data
             """
-            return self.recv()
+            return self.recv(numbytes=4096)
 
         def inWaiting(self):
             # XXX replace this with some real waiting state detection
@@ -53,26 +56,30 @@ try:
 
     protocols['bluetooth'] = BluetoothSocket
 except ImportError as err:
+    bluetooth = None
     print 'can not import bluetooth', err
 
 
 try:
-    import socket
+    import serial
 
-    class Socket(Protocol):
-        def __init__(self):
-            super(self, Socket).__init__(self.getsockname())
+    class SerialSocket(Protocol):
+        def __init__(self, config):
+            self.ser = serial.Serial(config['addr'], config['baudrate'])
+            super(SerialSocket, self).__init__(self.ser.name)
 
         def write(self, data):
-            self.send(data)
+            self.ser.write(data)
 
-    def inWaiting(self):
-        # XXX replace this with some real wating state detection
-        return 0
+        def inWaiting(self):
+            # XXX replace this with some real wating state detection
+            return 0
 
-    protocols['socket'] = Socket
+    protocols['serial'] = SerialSocket
 except ImportError as err:
+    socket = None
     print 'can not import socket', err
+
 
 #sock = BTFirmataSock(bluetooth.RFCOMM)
 #sock.connect((bd_addr, port))
