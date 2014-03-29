@@ -1,0 +1,11 @@
+#:kivy 1.0.9
+
+<Main>
+    size_hint: (1, 1)
+    size: (self.width, self.height)
+    Slider:
+        id: slider
+        min: 0
+        max: 255
+        on_value: root.set_servo_pos(slider.value)
+
