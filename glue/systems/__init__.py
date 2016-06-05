@@ -16,7 +16,8 @@ class System(object):
 
 try:
     # make sure to use a firmata-version that does not need to import
-    # serial if you want to build for kivy,
+    # serial if you want to build for kivy
+    # ("import serial" will fail on normal kivy, see serial_test-project)
     # see https://github.com/brean/pyFirmata
     from pyfirmata import Board, BOARDS, BOARD_SETUP_WAIT_TIME
 
